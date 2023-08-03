@@ -94,14 +94,18 @@ jsonnet = ["jsonnetfmt --no-use-implicit-plus -"]
 
 Treesitter provides better highlighting and folding capabilities, this config uses [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter):
 
-> NOTE: I'm currently relying on my [own fork/branch](https://github.com/Duologic/tree-sitter-jsonnet/tree/in_operator) awaiting upstream pull requests.
+> *NOTE*
+>
+> I'm currently relying on my [own fork](https://github.com/Duologic/tree-sitter-jsonnet) awaiting upstream pull requests.
+>
+> The queries that currently ship with `nvim-treesitter` do not work with this fork, you might want to temporarily remove the queries in nvim-treesitter to avoid the conflict. This plugin contains queries in `after/queries/` that work with the fork.
 
 ```lua
 local parser_config = require 'nvim-treesitter.parsers'.get_parser_configs()
 parser_config.jsonnet = {
     install_info = {
         url = 'https://github.com/Duologic/tree-sitter-jsonnet',
-        branch = 'in_operator'
+        branch = 'fork'
         files = { 'src/parser.c', 'src/scanner.c' },
         -- Generate parser locally for the time being
         generate_requires_npm = true,
