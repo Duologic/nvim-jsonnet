@@ -3,6 +3,7 @@
  (object)
  (array)
  (parenthesis)
+ (bind)
 ; (params)
 ; (args)
 ; (conditional)

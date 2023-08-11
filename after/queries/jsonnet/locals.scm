@@ -9,8 +9,10 @@
   (#set! "definition.function.scope" "parent")
 )
 
+(bind (id)  @definition.var)
 (bind function: (id)  @definition.function)
 
 (param (id) @definition.parameter)
 
 (id) @reference
+;(fieldname (id) (#is-not? local))

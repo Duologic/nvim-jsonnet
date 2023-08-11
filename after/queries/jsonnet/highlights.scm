@@ -1,3 +1,4 @@
+(id) @variable
 (comment) @comment
 
 ; Literals
@@ -21,7 +22,6 @@
 [
   (local)
   (tailstrict)
-  "function"
   "assert"
   "error"
 ] @keyword
@@ -80,19 +80,24 @@
   (importstr)
 ] @include
 
-; Identifiers
-(id) @variable
+; References
 
-; Make reference same color as parameter (may incur performance issues on big files)
+; Make reference same color as parameter 
+; (may incur performance issues on big files)
 ; Depends on locals.scm
 ((id) @parameter.reference
  (#is? @parameter.reference parameter))
+
 ((id) @function.reference
  (#is? @function.reference function))
+
 ((id) @var.reference
- (#is? @var.reference variable.special))
+ (#is? @var.reference var))
+((id) @define
+ (#is? @var.reference var))
 
 ; References do not apply to static field IDs
+; Workaround for `(#is-not? local)` not supported
 (fieldname (id) @field)
 (fieldname (string
              (string_start) @text.strong
@@ -106,6 +111,11 @@
   (id) @parameter.reference
   "]"
   (#is? @parameter.reference parameter)))
+(fieldname
+ ("["
+  (id) @define
+  "]"
+  (#is? @var.reference var)))
 
 ; Functions
 (field
@@ -120,6 +130,7 @@
 (param
   identifier: (id) @parameter)
 
+(bind (id) @define)
 (bind function: (id) @function)
 
 ; Function call
@@ -140,7 +151,7 @@
   ")"
 )
 
-; Warn for implicit plus
+; Emphasize implicit plus usage
 (implicit_plus
   (_ "}"? @text.danger)
   (object
