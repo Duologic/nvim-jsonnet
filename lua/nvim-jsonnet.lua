@@ -37,7 +37,7 @@ M.setup = function(options)
     vim.api.nvim_create_user_command(
         'JsonnetEvalString',
         function(opts)
-            utils.RunCommand(M.options.jsonnet_bin, M.options.jsonnet_args, '', opts)
+            utils.RunCommand(M.options.jsonnet_string_bin, M.options.jsonnet_string_args, '', opts)
         end,
         { nargs = '?' })
 
