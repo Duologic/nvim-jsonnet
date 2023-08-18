@@ -22,6 +22,7 @@
 [
   (local)
   (tailstrict)
+  "function"
   "assert"
   "error"
 ] @keyword
