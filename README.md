@@ -1,6 +1,8 @@
 # nvim-jsonnet
 
-Provide functions to evaluate Jsonnet code inside a split view.
+Features:
+* Provide functions to evaluate Jsonnet code inside a split view
+* Extend nvim-treesitter highlighting with references and linting
 
 ## Usage
 
@@ -27,7 +29,7 @@ This plugin does not provide syntax highlighting, folding, formatting or linting
 
 ### LSP Config
 
-LSP with jsonnet-language-server provides formatting and linting out of the box, this config uses [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/):
+LSP with jsonnet-language-server provides formatting and linting out of the box, this config uses [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/).
 
 ```lua
 require('lspconfig').jsonnet_ls.setup({
@@ -56,7 +58,8 @@ vim.api.nvim_create_autocmd(
 ```
 
 ### null-ls/cbfmt
- For formatting code blocks inside Markdown you can use null-ls with `cbfmt`.
+
+For formatting code blocks inside Markdown you can use null-ls with `cbfmt`.
 
 ```lua
 local null_ls = require('null-ls')
@@ -92,27 +95,9 @@ jsonnet = ["jsonnetfmt --no-use-implicit-plus -"]
 
 ### Treesitter
 
-Treesitter provides better highlighting and folding capabilities, this config uses [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter):
-
-> *NOTE*
->
-> I'm currently relying on my [own fork](https://github.com/Duologic/tree-sitter-jsonnet) awaiting upstream pull requests.
->
-> The queries that currently ship with `nvim-treesitter` do not work with this fork, you might want to temporarily remove the queries in nvim-treesitter to avoid the conflict. This plugin contains queries in `after/queries/` that work with the fork.
+Treesitter provides better highlighting and folding capabilities, this config uses [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
 
 ```lua
-local parser_config = require 'nvim-treesitter.parsers'.get_parser_configs()
-parser_config.jsonnet = {
-    install_info = {
-        url = 'https://github.com/Duologic/tree-sitter-jsonnet',
-        branch = 'fork'
-        files = { 'src/parser.c', 'src/scanner.c' },
-        -- Generate parser locally for the time being
-        generate_requires_npm = true,
-        requires_generate_from_grammar = true,
-    },
-}
-
 require 'nvim-treesitter'.setup()
 require 'nvim-treesitter.configs'.setup({
     highlight = { enable = true },
