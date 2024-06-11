@@ -41,7 +41,7 @@ This plugin does not provide syntax highlighting, folding, formatting or linting
 
 LSP with jsonnet-language-server provides formatting and linting out of the box, this config uses [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/).
 
-See setup options to enable opinionated setup.
+See [Usage](#Usage) to enable opinionated setup.
 
 Tip: configure format on save for all LSP buffers:
 ```lua
@@ -61,7 +61,7 @@ vim.api.nvim_create_autocmd(
 
 [nvim-dap](https://github.com/mfussenegger/nvim-dap) provides a way to run the [jsonnet-debugger](https://github.com/grafana/jsonnet-debugger), this works great in combination with [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui).
 
-See setup options to enable.
+Install the debugger with `go install github.com/grafana/jsonnet-debugger@v0.1.0` and see [Usage](#Usage) to enable.
 
 ### Treesitter
 
