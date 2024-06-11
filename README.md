@@ -14,6 +14,16 @@ require('nvim-jsonnet').setup({
     jsonnet_string_bin = 'jsonnet',
     jsonnet_string_args = { '-S', '-J', 'vendor', '-J', 'lib' },
     use_tanka_if_possible = true
+
+    -- default to false to not break existing installs
+    load_lsp_config = false
+    -- Pass along nvim-cmp capabilities if you use that.
+    capabilities = require('cmp_nvim_lsp').default_capabilities(),
+
+    -- default to false to not break existing installs
+    load_dap_config = false,
+    jsonnet_debugger_bin = 'jsonnet-debugger',
+    jsonnet_debugger_args = { '-s', '-d', '-J', 'vendor', '-J', 'lib' },
 })
 ```
 
@@ -31,20 +41,10 @@ This plugin does not provide syntax highlighting, folding, formatting or linting
 
 LSP with jsonnet-language-server provides formatting and linting out of the box, this config uses [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/).
 
-```lua
-require('lspconfig').jsonnet_ls.setup({
-    capabilities = vim.lsp.protocol.make_client_capabilities(),
-    flags = {
-        debounce_text_changes = 150,
-    },
-    cmd = { 'jsonnet-language-server', '--lint' }, -- Linting can be noisy
-    settings = {
-        formatting = {
-            UseImplicitPlus = true, -- Recommended but might conflict with project-level jsonnetfmt settings
-        }
-    }
-})
+See setup options to enable opinionated setup.
 
+Tip: configure format on save for all LSP buffers:
+```lua
 -- Format on save
 vim.api.nvim_create_autocmd(
     'BufWritePre',
@@ -57,9 +57,34 @@ vim.api.nvim_create_autocmd(
 )
 ```
 
+### DAP
+
+[nvim-dap](https://github.com/mfussenegger/nvim-dap) provides a way to run the [jsonnet-debugger](https://github.com/grafana/jsonnet-debugger), this works great in combination with [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui).
+
+See setup options to enable.
+
+### Treesitter
+
+Treesitter provides better highlighting and folding capabilities, this config uses [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
+
+Minimal configuration:
+
+```lua
+require 'nvim-treesitter'.setup()
+require 'nvim-treesitter.configs'.setup({
+    highlight = { enable = true },
+})
+
+vim.wo.foldmethod = 'expr'
+vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.wo.foldlevel  = 1000
+```
+
 ### null-ls/cbfmt
 
 For formatting code blocks inside Markdown you can use null-ls with `cbfmt`.
+
+TODO: null-ls has been archived, look for replacement.
 
 ```lua
 local null_ls = require('null-ls')
@@ -91,19 +116,4 @@ null_ls.setup({
 # ~/.config/nvim/cbfmt.toml
 [languages]
 jsonnet = ["jsonnetfmt --no-use-implicit-plus -"]
-```
-
-### Treesitter
-
-Treesitter provides better highlighting and folding capabilities, this config uses [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter).
-
-```lua
-require 'nvim-treesitter'.setup()
-require 'nvim-treesitter.configs'.setup({
-    highlight = { enable = true },
-})
-
-vim.wo.foldmethod = 'expr'
-vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-vim.wo.foldlevel  = 1000
 ```
