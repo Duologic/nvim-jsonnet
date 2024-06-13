@@ -60,37 +60,37 @@ M.setup = function(options)
                 vim.keymap.set('n', '<leader>k', '<cmd>JsonnetEvalString<cr>')
                 vim.keymap.set('n', '<leader>l', '<esc>:<\',\'>!jsonnetfmt -<cr>')
                 vim.opt_local.foldlevelstart = 1
-
-                local hasLspconfig, lspconfig = pcall(require, 'lspconfig')
-                if M.options.load_lsp_config and hasLspconfig then
-                    lspconfig.jsonnet_ls.setup {
-                        capabilities = M.options.capabilities,
-                        settings = {
-                            formatting = {
-                                UseImplicitPlus = stringtoboolean[os.getenv('JSONNET_IMPLICIT_PLUS')] or false
-                            }
-                        }
-                    }
-                end
-
-                local hasDap, dap = pcall(require, 'dap')
-                if M.options.load_dap_config and hasDap then
-                    dap.adapters.jsonnet = {
-                        type = 'executable',
-                        command = M.options.jsonnet_debugger_bin,
-                        args = M.options.jsonnet_debugger_args,
-                    }
-                    dap.configurations.jsonnet = {
-                        {
-                            type = 'jsonnet',
-                            request = 'launch',
-                            name = 'debug',
-                            program = '${file}',
-                        }
-                    }
-                end
             end,
         })
+
+    local hasLspconfig, lspconfig = pcall(require, 'lspconfig')
+    if M.options.load_lsp_config and hasLspconfig then
+        lspconfig.jsonnet_ls.setup {
+            capabilities = M.options.capabilities,
+            settings = {
+                formatting = {
+                    UseImplicitPlus = stringtoboolean[os.getenv('JSONNET_IMPLICIT_PLUS')] or false
+                }
+            }
+        }
+    end
+
+    local hasDap, dap = pcall(require, 'dap')
+    if M.options.load_dap_config and hasDap then
+        dap.adapters.jsonnet = {
+            type = 'executable',
+            command = M.options.jsonnet_debugger_bin,
+            args = M.options.jsonnet_debugger_args,
+        }
+        dap.configurations.jsonnet = {
+            {
+                type = 'jsonnet',
+                request = 'launch',
+                name = 'debug',
+                program = '${file}',
+            }
+        }
+    end
 end
 
 return M
