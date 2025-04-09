@@ -64,7 +64,7 @@ local function apply_mappings()
                 mapping_config.mode,
                 M.options.key_prefix .. mapping_config.key,
                 mapping_config.cmd,
-                { desc = mapping_config.desc, silent = true, noremap = true }
+                { desc = mapping_config.desc, silent = true, noremap = true, buffer = true }
             )
         end
     end
