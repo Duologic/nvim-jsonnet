@@ -68,6 +68,19 @@ local function apply_mappings()
     end
 end
 
+local function eval_jsonnet(opts)
+    utils.RunCommand(M.options.jsonnet_bin, M.options.jsonnet_args, 'json', opts)
+end
+
+local function eval_jsonnet_string(opts)
+    utils.RunCommand(M.options.jsonnet_string_bin, M.options.jsonnet_string_args, '', opts)
+end
+
+local function format_jsonnet()
+    vim.cmd('!jsonnetfmt %')
+end
+
+-- Setup function to initialize the plugin
 M.setup = function(options)
     -- Merge user options with defaults
     M.options = vim.tbl_deep_extend('force', {}, defaults, options or {})
@@ -81,17 +94,25 @@ M.setup = function(options)
         end
     end
 
+    M.eval_jsonnet = eval_jsonnet
+    M.eval_jsonnet_string = eval_jsonnet_string
+    M.format_jsonnet = format_jsonnet
+
     vim.api.nvim_create_user_command('JsonnetPrintConfig', function()
         print(vim.inspect(M.options))
-    end, {})
+    end, { desc = 'Print Jsonnet plugin configuration' })
 
     vim.api.nvim_create_user_command('JsonnetEval', function(opts)
-        utils.RunCommand(M.options.jsonnet_bin, M.options.jsonnet_args, 'json', opts)
-    end, { nargs = '?' })
+        M.eval_jsonnet(opts)
+    end, { nargs = '?', desc = 'Evaluate Jsonnet file' })
 
     vim.api.nvim_create_user_command('JsonnetEvalString', function(opts)
-        utils.RunCommand(M.options.jsonnet_string_bin, M.options.jsonnet_string_args, '', opts)
-    end, { nargs = '?' })
+        M.eval_jsonnet_string(opts)
+    end, { nargs = '?', desc = 'Evaluate Jsonnet file as string' })
+
+    vim.api.nvim_create_user_command('JsonnetFormat', function()
+        M.format_jsonnet()
+    end, { desc = 'Format Jsonnet file' })
 
     vim.api.nvim_create_autocmd('FileType', {
         pattern = { 'jsonnet' },
