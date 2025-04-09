@@ -1,4 +1,4 @@
-local utils = require('jsonnet.utils')
+local utils = require('nvim-jsonnet.utils')
 local stringtoboolean = { ['true'] = true, ['false'] = false }
 
 local M = {}
