@@ -163,9 +163,6 @@ M.setup = function(options)
             do_setup(options)
 
             apply_mappings()
-
-            -- Set folding options
-            vim.opt_local.foldlevelstart = 1
         end,
     })
 end
