@@ -17,9 +17,59 @@ local defaults = {
     load_dap_config = false,
     jsonnet_debugger_bin = 'jsonnet-debugger',
     jsonnet_debugger_args = { '-s', '-d', '-J', 'vendor', '-J', 'lib' },
+
+    -- A prefix prepended to all key mappings
+    key_prefix = '<leader>',
+
+    -- Keymap configuration. Each key can be individually overridden. Each binding
+    -- will have `key_prefix` prepended.
+    keys = {
+        eval = {
+            key = 'j',
+            desc = 'Evaluate Jsonnet file',
+            mode = 'n',
+            cmd = '<cmd>JsonnetEval<cr>',
+            enabled = true,
+        },
+        eval_string = {
+            key = 'k',
+            desc = 'Evaluate Jsonnet file as string',
+            mode = 'n',
+            cmd = '<cmd>JsonnetEvalString<cr>',
+            enabled = true,
+        },
+        format = {
+            key = 'l',
+            desc = 'Format Jsonnet file',
+            mode = 'n',
+            cmd = '<cmd>!jsonnetfmt %<cr>',
+            enabled = true,
+        },
+    },
+
+    -- Set to false to disable all default key mappings
+    setup_mappings = true,
 }
 
+local function apply_mappings()
+    if not M.options.setup_mappings then
+        return
+    end
+
+    for _, mapping_config in pairs(M.options.keys) do
+        if mapping_config.enabled then
+            vim.keymap.set(
+                mapping_config.mode,
+                M.options.key_prefix .. mapping_config.key,
+                mapping_config.cmd,
+                { desc = mapping_config.desc, silent = true, noremap = true }
+            )
+        end
+    end
+end
+
 M.setup = function(options)
+    -- Merge user options with defaults
     M.options = vim.tbl_deep_extend('force', {}, defaults, options or {})
 
     if M.options.use_tanka_if_possible then
@@ -46,9 +96,8 @@ M.setup = function(options)
     vim.api.nvim_create_autocmd('FileType', {
         pattern = { 'jsonnet' },
         callback = function()
-            vim.keymap.set('n', '<leader>j', '<cmd>JsonnetEval<cr>')
-            vim.keymap.set('n', '<leader>k', '<cmd>JsonnetEvalString<cr>')
-            vim.keymap.set('n', '<leader>l', "<esc>:<','>!jsonnetfmt -<cr>")
+            apply_mappings()
+
             vim.opt_local.foldlevelstart = 1
         end,
     })
