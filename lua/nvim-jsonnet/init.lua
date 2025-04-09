@@ -1,7 +1,9 @@
 local utils = require('nvim-jsonnet.utils')
 local stringtoboolean = { ['true'] = true, ['false'] = false }
 
-local M = {}
+local M = {
+    did_setup = false,
+}
 
 local defaults = {
     jsonnet_bin = os.getenv('JSONNET_BIN') or 'jsonnet',
@@ -80,8 +82,13 @@ local function format_jsonnet()
     vim.cmd('!jsonnetfmt %')
 end
 
--- Setup function to initialize the plugin
-M.setup = function(options)
+local function do_setup(options)
+    if M.did_setup then
+        return
+    end
+
+    M.did_setup = true
+
     -- Merge user options with defaults
     M.options = vim.tbl_deep_extend('force', {}, defaults, options or {})
 
@@ -116,11 +123,7 @@ M.setup = function(options)
 
     vim.api.nvim_create_autocmd('FileType', {
         pattern = { 'jsonnet' },
-        callback = function()
-            apply_mappings()
-
-            vim.opt_local.foldlevelstart = 1
-        end,
+        callback = apply_mappings,
     })
 
     local hasLspconfig, lspconfig = pcall(require, 'lspconfig')
@@ -151,6 +154,20 @@ M.setup = function(options)
             },
         }
     end
+end
+
+M.setup = function(options)
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'jsonnet' },
+        callback = function(_)
+            do_setup(options)
+
+            apply_mappings()
+
+            -- Set folding options
+            vim.opt_local.foldlevelstart = 1
+        end,
+    })
 end
 
 return M
