@@ -31,48 +31,38 @@ M.setup = function(options)
         end
     end
 
-    vim.api.nvim_create_user_command(
-        'JsonnetPrintConfig',
-        function()
-            print(vim.inspect(M.options))
-        end, {})
+    vim.api.nvim_create_user_command('JsonnetPrintConfig', function()
+        print(vim.inspect(M.options))
+    end, {})
 
-    vim.api.nvim_create_user_command(
-        'JsonnetEval',
-        function(opts)
-            utils.RunCommand(M.options.jsonnet_bin, M.options.jsonnet_args, 'json', opts)
+    vim.api.nvim_create_user_command('JsonnetEval', function(opts)
+        utils.RunCommand(M.options.jsonnet_bin, M.options.jsonnet_args, 'json', opts)
+    end, { nargs = '?' })
+
+    vim.api.nvim_create_user_command('JsonnetEvalString', function(opts)
+        utils.RunCommand(M.options.jsonnet_string_bin, M.options.jsonnet_string_args, '', opts)
+    end, { nargs = '?' })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'jsonnet' },
+        callback = function()
+            vim.keymap.set('n', '<leader>j', '<cmd>JsonnetEval<cr>')
+            vim.keymap.set('n', '<leader>k', '<cmd>JsonnetEvalString<cr>')
+            vim.keymap.set('n', '<leader>l', "<esc>:<','>!jsonnetfmt -<cr>")
+            vim.opt_local.foldlevelstart = 1
         end,
-        { nargs = '?' })
-
-    vim.api.nvim_create_user_command(
-        'JsonnetEvalString',
-        function(opts)
-            utils.RunCommand(M.options.jsonnet_string_bin, M.options.jsonnet_string_args, '', opts)
-        end,
-        { nargs = '?' })
-
-    vim.api.nvim_create_autocmd(
-        'FileType',
-        {
-            pattern = { 'jsonnet' },
-            callback = function()
-                vim.keymap.set('n', '<leader>j', '<cmd>JsonnetEval<cr>')
-                vim.keymap.set('n', '<leader>k', '<cmd>JsonnetEvalString<cr>')
-                vim.keymap.set('n', '<leader>l', '<esc>:<\',\'>!jsonnetfmt -<cr>')
-                vim.opt_local.foldlevelstart = 1
-            end,
-        })
+    })
 
     local hasLspconfig, lspconfig = pcall(require, 'lspconfig')
     if M.options.load_lsp_config and hasLspconfig then
-        lspconfig.jsonnet_ls.setup {
+        lspconfig.jsonnet_ls.setup({
             capabilities = M.options.capabilities,
             settings = {
                 formatting = {
-                    UseImplicitPlus = stringtoboolean[os.getenv('JSONNET_IMPLICIT_PLUS')] or false
-                }
-            }
-        }
+                    UseImplicitPlus = stringtoboolean[os.getenv('JSONNET_IMPLICIT_PLUS')] or false,
+                },
+            },
+        })
     end
 
     local hasDap, dap = pcall(require, 'dap')
@@ -88,7 +78,7 @@ M.setup = function(options)
                 request = 'launch',
                 name = 'debug',
                 program = '${file}',
-            }
+            },
         }
     end
 end
