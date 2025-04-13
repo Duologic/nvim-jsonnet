@@ -1,8 +1,9 @@
 # nvim-jsonnet
 
 Features:
-* Provide functions to evaluate Jsonnet code inside a split view
-* Extend nvim-treesitter highlighting with references and linting
+
+- Provide functions to evaluate Jsonnet code inside a split view
+- Extend nvim-treesitter highlighting with references and linting
 
 ## Usage
 
@@ -41,9 +42,10 @@ This plugin does not provide syntax highlighting, folding, formatting or linting
 
 LSP with jsonnet-language-server provides formatting and linting out of the box, this config uses [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/).
 
-See [Usage](#Usage) to enable opinionated setup.
+See [Usage](#usage) to enable opinionated setup.
 
 Tip: configure format on save for all LSP buffers:
+
 ```lua
 -- Format on save
 vim.api.nvim_create_autocmd(
@@ -61,7 +63,7 @@ vim.api.nvim_create_autocmd(
 
 [nvim-dap](https://github.com/mfussenegger/nvim-dap) provides a way to run the [jsonnet-debugger](https://github.com/grafana/jsonnet-debugger), this works great in combination with [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui).
 
-Install the debugger with `go install github.com/grafana/jsonnet-debugger@v0.1.0` and see [Usage](#Usage) to enable.
+Install the debugger with `go install github.com/grafana/jsonnet-debugger@v0.1.0` and see [Usage](#usage) to enable.
 
 ### Treesitter
 
