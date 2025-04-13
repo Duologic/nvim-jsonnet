@@ -80,6 +80,49 @@ vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.wo.foldlevel  = 1000
 ```
 
+### Window layouts
+
+Various window layouts are available. See [./lua/nvim-jsonnet/config.lua] for
+full details of all the configuration options and the defaults. Set just what
+you need: unchanged values will be taken from the defaults.
+
+Use a floating window sized to 40% of the screen width:
+
+```lua
+window = {
+    layout = "float",
+    width = 0.4
+}
+```
+
+![Floating window](./screenshots/float.png)
+
+Integrate with [`edgy.nvim`][edgy]'s sidebar:
+
+```lua
+// This is an example `lazy.nvim` configuration
+{
+  "folke/edgy.nvim",
+
+  optional = true,
+
+  opts = function(_, opts)
+    opts.right = opts.right or {}
+
+    table.insert(opts.right, {
+      ft = "jsonnet-output",
+      title = "Jsonnet",
+
+      size = { width = 50 },
+    })
+  end,
+},
+```
+
+![Edgy sidebar](./screenshots/edgy.png)
+
+[edgy]: https://github.com/folke/edgy.nvim
+
 ### null-ls/cbfmt
 
 For formatting code blocks inside Markdown you can use null-ls with `cbfmt`.
