@@ -37,6 +37,8 @@ By default, `:JsonnetEval` will open in a horizontal split, use `:vertical Jsonn
 
 This plugin does not provide syntax highlighting, folding, formatting or linting. Please rely on LSP, Treesitter and other plugins to aid with this.
 
+You should not install both `vim-jsonnet` and this plugin, since they both provide the `JsonnetEval` command.
+
 ### LSP Config
 
 LSP with jsonnet-language-server provides formatting and linting out of the box, this config uses [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/).
