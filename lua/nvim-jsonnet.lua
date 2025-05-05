@@ -22,15 +22,6 @@ local defaults = {
 M.setup = function(options)
     M.options = vim.tbl_deep_extend('force', {}, defaults, options or {})
 
-    if M.options.use_tanka_if_possible then
-        -- Use Tanka if `tk tool jpath` works.
-        local _ = vim.fn.system('tk tool jpath ' .. vim.fn.shellescape(vim.fn.expand('%')))
-        if vim.api.nvim_get_vvar('shell_error') == 0 then
-            M.options.jsonnet_bin = 'tk'
-            M.options.jsonnet_args = { 'eval' }
-        end
-    end
-
     vim.api.nvim_create_user_command(
         'JsonnetPrintConfig',
         function()
@@ -40,7 +31,19 @@ M.setup = function(options)
     vim.api.nvim_create_user_command(
         'JsonnetEval',
         function(opts)
-            utils.RunCommand(M.options.jsonnet_bin, M.options.jsonnet_args, 'json', opts)
+
+        local jsonnet_bin = M.options.jsonnet_bin
+        local jsonnet_args = M.options.jsonnet_args
+
+        if M.options.use_tanka_if_possible then
+          -- Use Tanka if `tk tool jpath` works.
+          local _ = vim.fn.system('tk tool jpath ' .. vim.fn.shellescape(vim.fn.expand('%')))
+          if vim.api.nvim_get_vvar('shell_error') == 0 then
+            jsonnet_bin = 'tk'
+            jsonnet_args = { 'eval' }
+          end
+        end
+            utils.RunCommand(jsonnet_bin, jsonnet_args, 'json', opts)
         end,
         { nargs = '?' })
 
