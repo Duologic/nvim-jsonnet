@@ -1,8 +1,9 @@
 # nvim-jsonnet
 
 Features:
-* Provide functions to evaluate Jsonnet code inside a split view
-* Extend nvim-treesitter highlighting with references and linting
+
+- Provide functions to evaluate Jsonnet code inside a split view
+- Extend nvim-treesitter highlighting with references and linting
 
 ## Usage
 
@@ -43,9 +44,10 @@ You should not install both `vim-jsonnet` and this plugin, since they both provi
 
 LSP with jsonnet-language-server provides formatting and linting out of the box, this config uses [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/).
 
-See [Usage](#Usage) to enable opinionated setup.
+See [Usage](#usage) to enable opinionated setup.
 
 Tip: configure format on save for all LSP buffers:
+
 ```lua
 -- Format on save
 vim.api.nvim_create_autocmd(
@@ -63,7 +65,7 @@ vim.api.nvim_create_autocmd(
 
 [nvim-dap](https://github.com/mfussenegger/nvim-dap) provides a way to run the [jsonnet-debugger](https://github.com/grafana/jsonnet-debugger), this works great in combination with [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui).
 
-Install the debugger with `go install github.com/grafana/jsonnet-debugger@v0.1.0` and see [Usage](#Usage) to enable.
+Install the debugger with `go install github.com/grafana/jsonnet-debugger@v0.1.0` and see [Usage](#usage) to enable.
 
 ### Treesitter
 
@@ -81,6 +83,49 @@ vim.wo.foldmethod = 'expr'
 vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.wo.foldlevel  = 1000
 ```
+
+### Window layouts
+
+Various window layouts are available. See [./lua/nvim-jsonnet/config.lua] for
+full details of all the configuration options and the defaults. Set just what
+you need: unchanged values will be taken from the defaults.
+
+Use a floating window sized to 40% of the screen width:
+
+```lua
+window = {
+    layout = "float",
+    width = 0.4
+}
+```
+
+![Floating window](./screenshots/float.png)
+
+Integrate with [`edgy.nvim`][edgy]'s sidebar:
+
+```lua
+// This is an example `lazy.nvim` configuration
+{
+  "folke/edgy.nvim",
+
+  optional = true,
+
+  opts = function(_, opts)
+    opts.right = opts.right or {}
+
+    table.insert(opts.right, {
+      ft = "jsonnet-output",
+      title = "Jsonnet",
+
+      size = { width = 50 },
+    })
+  end,
+},
+```
+
+![Edgy sidebar](./screenshots/edgy.png)
+
+[edgy]: https://github.com/folke/edgy.nvim
 
 ### null-ls/cbfmt
 
